@@ -102,3 +102,30 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+build/
+__pycache__
+.DS_Store
+.gradle
+.settings
+.idea
+.cache
+.pytest_cache
+.coverage
+.tox
+.swp
+.eggs
+.virtualenv*
+.vscode/
+resilient_circuits_lockfile
+*.iml
+*.pem
+*.pyc
+*.log
+*.log.*
+*~
+*.egg-info
+*.tar.gz
+*.pytest_cache
+*.bak
+

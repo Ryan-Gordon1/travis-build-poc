@@ -13,7 +13,7 @@ class FunctionComponent(ResilientComponent):
     """Component that implements Resilient function 'task_utils_add_note"""
 
     def __init__(self, opts):
-        """constructor provides access to the configuration options"""
+        """constructor1 provides access to the configuration options"""
         super(FunctionComponent, self).__init__(opts)
         self.options = opts.get("fn_task_utils", {})
 

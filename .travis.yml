@@ -23,10 +23,10 @@ stages:
 matrix:
   fast_finish: true
   include:
-# Jobs below this line are reserved for push contributions i.e when someone pushes changes
-# ==========
-# Below jobs are used to run tests against the most recently modified integration. 
-# We determine the most recent one using ls. 
+  # Jobs below this line are reserved for push contributions i.e when someone pushes changes
+  # ==========
+  # Below jobs are used to run tests against the most recently modified integration. 
+  # We determine the most recent one using ls. 
   - name: run 2.7 tests on most recent modified integration
     stage: run tests for most recently modified integration on push
     # require the branch name to be master (note for PRs this is the base branch name)
@@ -79,7 +79,3 @@ after_failure:
 
 notifications:
   email: false
-#notifications:
-#  slack:
-#    rooms: ibm-security:9xGeUjQaqaNY1qgBG6ORFaSl
-#    on_success: change

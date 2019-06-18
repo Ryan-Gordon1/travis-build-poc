@@ -49,6 +49,28 @@ matrix:
     - TOXENV=py34 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
     script:
       - echo "3.4 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+  # Platform Specific Jobs. Jobs that run on Linux, OSX or Windows
+  # Good for ensuring stability through mock and live tests
+  # Windows builds are not available for Enterprise yet, this will be a potential way to automate out testing efforts
+  # - name: "Python 3.7.1 on Xenial Linux"
+  #   stage: platform tests
+  #   python: 3.7           # this works for Linux but is ignored on macOS or Windows
+  #   dist: xenial          # required for Python >= 3.7
+  #   env:
+  #   - TOXENV=py37 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+  # - name: "Python 3.7.2 on macOS"
+  #   os: osx
+  #   osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
+  #   language: shell       # 'language: python' is an error on Travis CI macOS
+  - name: "Python 3.6.8 on Windows"
+    stage: platform tests
+    os: windows           # Windows 10.0.17134 N/A Build 17134
+    language: sh       # 'language: python' is an error on Travis CI Windows
+    before_install:
+    - choco install python --version 3.6.8
+    - python -m pip install --upgrade pip
+    env: PATH=/c/Python36:/c/Python36/Scripts:$PATH TOXENV=py27,py36 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+
 install:
   - pip install --upgrade pip
   - pip install --upgrade setuptools

@@ -36,6 +36,8 @@ matrix:
     name: "Python 2.7 Build and Run Tests"
     env:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
+    script:
+      - echo "2.7 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
   - name: run 3.4 tests on most recent modified integration
     stage: run tests for most recently modified integration on push
     # require the branch name to be master (note for PRs this is the base branch name)

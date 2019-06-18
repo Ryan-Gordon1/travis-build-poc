@@ -70,7 +70,7 @@ matrix:
     before_install:
     - choco install python --version 3.6.8
     - python -m pip install --upgrade pip
-    env: PATH=/c/Python36:/c/Python36/Scripts:$PATH TOXENV=py27,py36 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+    env: PATH=/c/Python36:/c/Python36/Scripts:$PATH TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
     script:
       - .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh
 

@@ -15,9 +15,9 @@ env:
 
 stages:
   - platform tests
-  - run tests for most recently modified integration on push
-  if: branch != master AND type=push
-  script:
+  - name: run tests for most recently modified integration on push
+    if: branch != master AND type=push
+    script:
     - echo "3.4 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
   - mock-tests
   - live-tests

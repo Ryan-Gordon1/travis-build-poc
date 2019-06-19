@@ -16,8 +16,6 @@ env:
 stages:
   - name: run tests for most recently modified integration on push
     if: branch != master AND type=push
-    script:
-    - echo "3.4 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
   - mock-tests
   - live-tests
   - platform tests
@@ -36,6 +34,9 @@ matrix:
     name: "Python 2.7 Build and Run Tests"
     env:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
+    script:
+    - echo "2.7 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+ 
   - stage: run tests for most recently modified integration on push
     python: 3.4
     name: "Python 3.4 Build and Run Tests"

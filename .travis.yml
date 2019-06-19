@@ -38,12 +38,12 @@ matrix:
     - echo "2.7 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
  
   - stage: run tests for most recently modified integration on push
-    python: 3.4
-    name: "Python 3.4 Build and Run Tests"
+    python: 3.6
+    name: "Python 3.6 Build and Run Tests"
     env:
-    - TOXENV=py34 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
+    - TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
     script:
-      - echo "3.4 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+      - echo "3.6 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
   # Platform Specific Jobs. Jobs that run on Linux, OSX or Windows
   # Good for ensuring stability through mock and live tests
   # Windows builds are not available for Enterprise yet, this will be a potential way to automate out testing efforts

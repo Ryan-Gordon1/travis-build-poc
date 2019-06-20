@@ -14,6 +14,7 @@ do
     then
         #TODO: remove explicit resilient args
         tox -c $toxfile -- --resilient_email 'integration@example.com' --resilient_password 'supersecret' --resilient_host '192.168.57.101' --resilient_org 'TestOrg'  tests;
+
         last_status=$?;
         if [ $last_status -ne 0 ]; then
             printf 'FAILURE %s: [%d]\n' $toxfile $last_status;

@@ -16,12 +16,12 @@ env:
 
 stages:
   - name: run tests for most recently modified integration on push
-    if: branch != master AND type=push
+    if: branch != master AND type=push 
   - name: mock-tests
     if: branch == master AND type != pull_request
   - live-tests
   - name: platform tests
-    if: branch == master AND type != pull_request
+    if: branch == master AND type != pull_request AND env(ON_PUBLIC) = True
 
   # - name: platform tests
   #   if: branch = master AND type=pull_request

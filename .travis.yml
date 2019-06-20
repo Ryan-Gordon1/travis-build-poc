@@ -59,6 +59,13 @@ matrix:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
     script:
     - echo "2.7 push test" && .scripts/build_packages.sh && .scripts/run_tests.sh 
+  - stage: mock-tests
+    python: 3.6
+    name: "Py36 Master Build and Run tests"
+    env:
+    - TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Test"
+    script:
+    - echo "3.6 push test" && .scripts/build_packages.sh && .scripts/run_tests.sh 
   # Platform Specific Jobs. Jobs that run on Linux, OSX or Windows
   # Good for ensuring stability through mock and live tests
   # Windows builds are not available for Enterprise yet, this will be a potential way to automate out testing efforts

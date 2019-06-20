@@ -16,7 +16,7 @@ env:
 
 stages:
   - name: run tests for most recently modified integration on push
-    if: branch != master AND type=push AND env(ON_PUBLIC) IS present
+    if: branch != master AND type=push 
   - name: mock-tests
     if: branch == master AND type != pull_request
   - live-tests

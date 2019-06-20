@@ -21,7 +21,7 @@ stages:
     if: branch == master AND type != pull_request
   - live-tests
   - name: platform tests
-    if: branch == master AND type != pull_request
+    if: branch == master AND type != pull_request AND env(ON_PUBLIC) = True
 
   # - name: platform tests
   #   if: branch = master AND type=pull_request
@@ -37,7 +37,6 @@ matrix:
 
     python: 2.7
     name: "Python 2.7 Build and Run Tests"
-    if: env(ON_PUBLIC) = True
     env:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
     script:

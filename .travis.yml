@@ -37,7 +37,7 @@ matrix:
 
     python: 2.7
     name: "Python 2.7 Build and Run Tests"
-    if: env(ON_PUBLIC) = "True"
+    if: env(ON_PUBLIC) = False
     env:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
     script:

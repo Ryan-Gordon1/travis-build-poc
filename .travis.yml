@@ -16,9 +16,11 @@ env:
 stages:
   - name: run tests for most recently modified integration on push
     if: branch != master AND type=push
-  - mock-tests
+  - name: mock-tests
+    if: branch == master AND type != pull_request
   - live-tests
-  - platform tests
+  - name: platform tests
+    if: branch == master AND type != pull_request
   # - name: platform tests
   #   if: branch = master AND type=pull_request
 
@@ -44,6 +46,16 @@ matrix:
     - TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
     script:
       - echo "3.6 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+  # Jobs below this line are reserved for master branch 
+  # Master branch is where all the integrations should be tested, its okay if it takes a while 
+  # As we have the push jobs above to handle individual commits
+  - stage: mock-tests
+    python: 2.7
+    name: "Py27 Master Build and Run tests"
+    env:
+    - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
+    script:
+    - echo "2.7 push test" && .scripts/build_packages.sh && .scripts/run_tests.sh 
   # Platform Specific Jobs. Jobs that run on Linux, OSX or Windows
   # Good for ensuring stability through mock and live tests
   # Windows builds are not available for Enterprise yet, this will be a potential way to automate out testing efforts

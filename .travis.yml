@@ -1,9 +1,10 @@
 language: python
 python: 2.7
 cache:
-  - pip
-  directories:
-    - $HOME/.cache/pip
+- pip
+directories:
+  - $HOME/.cache/pip
+
 
 env:
   global:
@@ -14,39 +15,89 @@ env:
   - secure: kr5Zz5frfrGOeuAylefGbDhY5s/YwyRhktuAly1ovOn/7Q3OJYjTq6h7wvnt1KQ/YeSdA+bxwOhWKbYHPQHAhovyo/5gsII7LruSs7VjdcD9tDoaYEoDBP7nki+NGr+dBVwrooGJ3f7TbuZs+4OSyPWD2FdN4PsOYLof4soDEW7C0cTP2KZ/wNGDjBGB2stOb6a5h4MQSohx+7B795noUoK5ojmygZObIGSDWmahR4kzCm+rEVLlMV0ptDCBXvn4xmJLCz5UOZhR27ckuiW342vNxShlms+rwWcvoxwbj61Qn3MEf9S9D59aJ+n4+u9Kb3VD4HJjlQ3rWZ/DADPfp7h6XOmfrQq3Xj3sQ4K2+8RMSFHdxWPsmhWd/Aty+YmWjoOnewoBfFaDUzFRURqwO3K+oh1H0IALTOTYQSYEeuVfi/+mwJRkKh0+IgvgscL5/bo+nVnQBk4FpWJRHV0x2fWiG8DHCKmInkkFSDHax3dHc9pYZXQTdNdfvsJRtc0rEn6GyVnRMia1TKLpB1joRhb7mkyc7pgDSatvV9W6+v6+evplHFxS7lkm9gqlW/ygJzPVYx7UaFuqo9cOi/c8sR6qf7NUTUi9Aa4aqY6qHNrkxfh7+5ck7wLTWmE0WL+0r3Z09Zg746SIGYqLrFQJZPn+JanFEy0q7kAU2Zr8vgE=
 
 stages:
-  - run tests for most recently modified integration on push
-  - mock-tests
+  - name: run tests for most recently modified integration on push
+    if: branch != master AND type=push
+  - name: mock-tests
+    if: branch == master AND type != pull_request
   - live-tests
+  - name: platform tests
+    if: branch == master AND type != pull_request
+
   # - name: platform tests
   #   if: branch = master AND type=pull_request
 
 matrix:
   fast_finish: true
   include:
-# Jobs below this line are reserved for push contributions i.e when someone pushes changes
-# ==========
-# Below jobs are used to run tests against the most recently modified integration. 
-# We determine the most recent one using ls. 
-  - name: run 2.7 tests on most recent modified integration
-    stage: run tests for most recently modified integration on push
-    # require the branch name to be master (note for PRs this is the base branch name)
-    if: branch != master AND type=push
-    #stage: mock-tests
+  # Jobs below this line are reserved for push contributions i.e when someone pushes changes
+  # ==========
+  # Below jobs are used to run tests against the most recently modified integration. 
+  # We determine the most recent one using ls. 
+  - stage: run tests for most recently modified integration on push
+
     python: 2.7
     name: "Python 2.7 Build and Run Tests"
     env:
     - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
-  - name: run 3.4 tests on most recent modified integration
-    stage: run tests for most recently modified integration on push
-    # require the branch name to be master (note for PRs this is the base branch name)
-    if: branch != master AND type=push
-    #stage: mock-tests
-    python: 3.4
-    name: "Python 3.4 Build and Run Tests"
-    env:
-    - TOXENV=py34 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
     script:
-      - echo "3.4 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+    - echo "2.7 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+ 
+  - stage: run tests for most recently modified integration on push
+    python: 3.6
+    name: "Python 3.6 Build and Run Tests"
+    env:
+    - TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Test" 
+    script:
+      - echo "3.6 push test" && .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh 
+  # Jobs below this line are reserved for master branch 
+  # Master branch is where all the integrations should be tested, its okay if it takes a while 
+  # As we have the push jobs above to handle individual commits
+  - stage: mock-tests
+    python: 2.7
+    name: "Py27 Master Build and Run tests"
+    env:
+    - TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Test"
+    script:
+    - echo "2.7 push test" && .scripts/build_packages.sh && .scripts/run_tests.sh 
+  # Platform Specific Jobs. Jobs that run on Linux, OSX or Windows
+  # Good for ensuring stability through mock and live tests
+  # Windows builds are not available for Enterprise yet, this will be a potential way to automate out testing efforts
+  # - name: "Python 3.7.1 on Xenial Linux"
+  #   stage: platform tests
+  #   python: 3.7           # this works for Linux but is ignored on macOS or Windows
+  #   dist: xenial          # required for Python >= 3.7
+  #   env:
+  #   - TOXENV=py37 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+  # - name: "Python 3.7.2 on macOS"
+  #   os: osx
+  #   osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
+  #   language: shell       # 'language: python' is an error on Travis CI macOS
+  #   env: TOXENV=py37 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+  #   script:
+  #     - .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh
+  - name: "Python 3.6.8 on Windows"
+    stage: platform tests
+    os: windows           # Windows 10.0.17134 N/A Build 17134
+    language: sh       # 'language: python' is an error on Travis CI Windows
+    before_install:
+    - choco install python --version 3.6.8
+    - python -m pip install --upgrade pip
+    env: PATH=/c/Python36:/c/Python36/Scripts:$PATH TOXENV=py36 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+    script:
+      - .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh
+
+  - name: "Python 2.7.15 on Windows"
+    stage: platform tests
+    os: windows           # Windows 10.0.17134 N/A Build 17134
+    language: sh       # 'language: python' is an error on Travis CI Windows
+    before_install:
+    - choco install python2 --version 2.7.15
+    - python -m pip install --upgrade pip
+    env: PATH=/c/Python27:/c/Python27/Scripts:$PATH TOXENV=py27 TEST_RESILIENT_ORG="Resilient Integrations - Linux"
+    script:
+      - .scripts/build_most_recent_package.sh && .scripts/run_most_recent_tests.sh
+
+
 install:
   - pip install --upgrade pip
   - pip install --upgrade setuptools
@@ -79,7 +130,4 @@ after_failure:
 
 notifications:
   email: false
-#notifications:
-#  slack:
-#    rooms: ibm-security:9xGeUjQaqaNY1qgBG6ORFaSl
-#    on_success: change
+

@@ -22,12 +22,13 @@ do
 done;
 
 # Zip all .tar.gz builds
-cd "$dist_dir"
-builds=(`find . -type f -name '*.tar.gz'`);
-echo "zip all these builds:";
-printf '  %s\n' "${builds[@]}";
-for build in ${builds[@]};
-do
-    zip_name=$(echo "${build}.zip"| sed s/.tar.gz//)
-    (zip -r "${zip_name}" $build)
-done;
+#cd "$dist_dir"
+#builds=(`find . -type f -name '*.tar.gz'`);
+#echo "zip all these builds:";
+#printf '  %s\n' "${builds[@]}";
+#for build in ${builds[@]};
+#do
+#    zip_name=$(echo "${build}.zip"| sed s/.tar.gz//)
+#    (zip -r "${zip_name}" $build)
+#done;
+
